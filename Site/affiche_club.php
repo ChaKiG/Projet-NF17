@@ -41,8 +41,8 @@
 
 <?php
 $sql = "SELECT C.nom, C.telephone, C.site,
-   (SELECT count(nomclub) FROM competition WHERE nomclub=C.nom) as nbco,
-   (SELECT count(nomclub) FROM karateka WHERE nomclub=C.nom) as nbka
+   (SELECT count(loginclub) FROM competition WHERE loginclub=C.login) as nbco,
+   (SELECT count(loginclub) FROM karateka WHERE loginclub=C.login) as nbka
    FROM club C";
 		
 		

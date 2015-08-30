@@ -1,27 +1,24 @@
 <!--classement final d'un competition-->
 
 <?php
-//include('connect.php');
-function classement($date, $nom) {
+include('connect.php');
 
-	$query= "SELECT gagnant  , perdant FROM confrontation  where dateCompetition = '$date' AND nomCompetition = '$nom' order by  numeroTour desc" ;
-	//echo $query;
-	$idConnecxion= fconnect();
-	$resultat = pg_query($idConnecxion,$query);
+function classement($date, $nom) 
+{
+	$sql= "SELECT gagnant, perdant FROM confrontation  WHERE datecompetition = '$date' AND nomcompetition = '$nom' AND numerotour = MAX(numerotour)" ;
+	$resultat = $db->query($sql);
 
-	$row = pg_fetch_array($resultat);
-	//var_dump($row);
+	$row = $resultat->fetch();
 	if($row['gagnant']== null){
 		// resultat n'a pas ete saisi
-		echo "le classement final n'est pas encore disponible! ";
-
+        die("le classement final n'est pas encore disponible! ");
 	}else{
-		$query2 = "SELECT nom FROM karateka WHERE id = ".$row['gagnant'];
-		$nom1 = pg_fetch_array(pg_query($idConnecxion,$query2));
-		$query2 = "SELECT nom FROM karateka WHERE id = ".$row['perdant'];
-		$nom2 = pg_fetch_array(pg_query($idConnecxion,$query2));
+        //on a seulement le dernier tour
+		$sql = "SELECT nom FROM karateka WHERE id = ".$row['gagnant'];
+		$nom1 = $db->query($sql)->fetch();
+		$sql = "SELECT nom FROM karateka WHERE id = ".$row['perdant'];
+		$nom2 = $db->query($sql)->fetch();
 		echo "gagnant : ".$nom1['nom']."deuxieme place : ".$nom2['nom'];
-
 	}
 	
 }

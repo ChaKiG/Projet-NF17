@@ -21,7 +21,7 @@ session_start()
 	}
 	else {
 		echo "<input type =\"text\" name =\"login\">login<br>";
-		echo "<input type =\"text\" name =\"dirigeant\">dirigeant<br>";
+		echo "<input type =\"text\" name =\"pwd\">mot de passe<br>";
 	}
 ?>
 	

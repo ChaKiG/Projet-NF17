@@ -9,11 +9,12 @@ CREATE TABLE authent(
 );
 
 CREATE TABLE Club(
-	nom character(128) NOT NULL,
+	login character(128) PRIMARY KEY, 
+    nom character(128) NOT NULL,
     password character(128) NOT NULL,
 	telephone character(10),
 	site character(128),
-	PRIMARY KEY (nom, telephone)
+	FOREIGN KEY (login) REFERENCES authent(login) ON DELETE CASCADE
 );
 
 CREATE TABLE Karateka(
@@ -25,9 +26,8 @@ CREATE TABLE Karateka(
 	ceinture ENUM('blanche', 'jaune', 'orange', 'verte', 'bleue', 'marron', 'noire', 'rougeblanche', 'rouge'),
 	dan INTEGER NOT NULL,
 	photo VARCHAR(128),
-	nomclub character(128),		
-	telclub character(128),
-	FOREIGN KEY (nomclub, telclub) REFERENCES Club(nom,telephone) ON DELETE CASCADE
+	loginclub character(128),
+	FOREIGN KEY (loginclub) REFERENCES Club(login) ON DELETE CASCADE
 )ENGINE = InnoDB
 ;
 
@@ -84,27 +84,26 @@ CREATE TABLE competition(
 	lieu character(128),
 	site character(128),
 	contact character(128),
-	nomclub character(128) NOT NULL,
-	telclub character(128) NOT NULL,
+	loginclub character(128) NOT NULL,
 	typecompetition ENUM('kumite', 'kata', 'tameshi', 'libre'),
 	CONSTRAINT PRIMARY KEY (date, nom),
-	CONSTRAINT FOREIGN KEY (nomclub, telclub) REFERENCES club(nom, telephone) ON DELETE CASCADE
+	CONSTRAINT FOREIGN KEY (loginclub) REFERENCES club(login) ON DELETE CASCADE
 )ENGINE = InnoDB
 ;
 
 CREATE VIEW competitionKumite AS
-	SELECT date, nom, lieu, site, contact, nomclub, telclub
+	SELECT date, nom, lieu, site, contact, loginclub
 	FROM competition
 	WHERE competition.typecompetition = 'kumite';
 
 CREATE VIEW competitionKata AS
-	SELECT date, nom, lieu, site, contact, nomclub, telclub
+	SELECT date, nom, lieu, site, contact, loginclub
 	FROM competition
 	WHERE competition.typecompetition = 'kata'
 ;
 
 CREATE VIEW competitionTameshi AS
-	SELECT date, nom, lieu, site, contact, nomclub, telclub
+	SELECT date, nom, lieu, site, contact, loginclub
 	FROM competition
 	WHERE competition.typecompetition = 'tameshi'
 ;

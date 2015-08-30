@@ -19,20 +19,24 @@ DELETE FROM coupsInterdits;
 
 INSERT INTO authent(login, password, type_util) VALUES ('admin', 'admin', 'administrateur');
 
+INSERT INTO authent(login, password, type_util) VALUES ('club_dojo_paris', 'admin', 'club');
+INSERT INTO club(login, nom, telephone, site) VALUES ('club_dojo_paris', 'dojo_paris', '0315784932', 'www.dojo_paris.com');
 
-INSERT INTO club(nom, telephone, site) VALUES ('dojo_paris', '0315784932', 'www.dojo_paris.com');
-INSERT INTO club(nom, telephone, site) VALUES ('karateland', '0456123754', 'www.dojo_karate.com');
-INSERT INTO club(nom, telephone, site) VALUES ('dojo_sombre', '0238451349', 'www.dojoS.com');
+INSERT INTO authent(login, password, type_util) VALUES ('club_karateland', 'admin', 'club');
+INSERT INTO club(login, nom, telephone, site) VALUES ('club_karateland', 'karateland', '0456123754', 'www.dojo_karate.com');
+
+INSERT INTO authent(login, password, type_util) VALUES ('club_dojo_sombre', 'admin', 'club');
+INSERT INTO club(login, nom, telephone, site) VALUES ('club_dojo_sombre', 'dojo_sombre', '0238451349', 'www.dojoS.com');
 
 
-INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, nomClub, telclub)
-    VALUES ('thomas', 20, 70, 170, 'rouge', 5, 'dojo_paris', '0315784932');
-INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, nomClub, telclub)
-    VALUES ('jeoffrey', 22, 80, 150, 'jaune', 4, 'karateland', '0456123754');
-INSERT INTO karateka(nom, age, poids, taille, ceinture, dan, nomClub, telclub)
-    VALUES ('fabrice', 25, 90, 190, 'rouge', 5, 'karateland', '0456123754');
-INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, nomClub, telclub)
-    VALUES ('jean-jacques', 50, 130, 180, 'blanche', 2, 'dojo_sombre', '0238451349');
+INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, loginclub)
+    VALUES ('thomas', 20, 70, 170, 'rouge', 5, 'club_dojo_paris');
+INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, loginclub)
+    VALUES ('jeoffrey', 22, 80, 150, 'jaune', 4, 'club_karateland');
+INSERT INTO karateka(nom, age, poids, taille, ceinture, dan, loginclub)
+    VALUES ('fabrice', 25, 90, 190, 'rouge', 5, 'club_karateland');
+INSERT INTO Karateka(nom, age, poids, taille, ceinture, dan, loginclub)
+    VALUES ('jean-jacques', 50, 130, 180, 'blanche', 2, 'club_dojo_sombre');
 
 
 INSERT INTO Kata (nom, description, ceinture_coresp, grade_coresp) VALUES ('karajoki', 'WUT ?!', 'rouge', 5);
@@ -88,12 +92,12 @@ INSERT INTO CategorieMvts(nommouvement,nomcategorie) VALUES ('plop','une_enieme_
 
 
 
-INSERT INTO competition(date, nom, lieu, contact, nomclub, telclub, typeCompetition)
-    VALUES ('2015-06-05', 'ma_premiere', 'compicity', '0689821231', 'dojo_paris', '0315784932', 'kata');
-INSERT INTO competition(date, nom, lieu, contact, nomclub, telclub, typeCompetition)
-    VALUES ('2015-05-25', 'une_compet', 'paris', '0348484546', 'karateland', '0456123754', 'kata');
-INSERT INTO competition(date, nom, lieu, contact, nomclub, telclub, typeCompetition)
-    VALUES ('2015-06-10', 'gilet_parballe', 'marseille', '0644521231', 'dojo_sombre', '0238451349', 'kumite');
+INSERT INTO competition(date, nom, lieu, contact, loginclub, typeCompetition)
+    VALUES ('2015-06-05', 'ma_premiere', 'compicity', '0689821231', 'club_dojo_paris', 'kata');
+INSERT INTO competition(date, nom, lieu, contact, loginclub, typeCompetition)
+    VALUES ('2015-05-25', 'une_compet', 'paris', '0348484546', 'club_karateland', 'kata');
+INSERT INTO competition(date, nom, lieu, contact, loginclub, typeCompetition)
+    VALUES ('2015-06-10', 'gilet_parballe', 'marseille', '0644521231', 'club_dojo_sombre', 'kumite');
     
 
 

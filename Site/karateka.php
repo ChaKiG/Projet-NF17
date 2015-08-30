@@ -20,7 +20,7 @@
 	<form method="POST" action="">
 		<p> Rechercher :</p>
 		Nom Karateka <input type="text" name="nom" value=""><br>
-		Club<input type="text" name="club" value=""><br>
+		Club<input type="text" name="nomclub" value=""><br>
 		Ceinture<input type="text" name="ceinture" value=""><br>
 		dan<input type="text" name="dan" value=""><br>
         <input type="radio" name="tri" value='nom' id="" />Nom<br>
@@ -47,25 +47,26 @@
 	</tr>
 
 <?php
-$sql = "SELECT id, nom, nomclub, age, poids, taille, ceinture, dan,
+$sql = "SELECT K.nom AS nom, C.nom AS nomclub, age, poids, taille, ceinture, dan,
 			(SELECT COUNT(*) 
-				FROM confrontation WHERE karateka.id = confrontation.gagnant) AS nbwin,
+				FROM confrontation, karateka WHERE karateka.id = confrontation.gagnant) AS nbwin,
 			(SELECT COUNT(*)
-				FROM confrontation WHERE karateka.id = confrontation.perdant) AS nbloss 
-			FROM karateka ";
-		
+				FROM confrontation, karateka WHERE karateka.id = confrontation.perdant) AS nbloss 
+			FROM karateka K, club C WHERE K.loginclub = C.login";
+
+
 if (isset($_POST['submit']))
-{
-    $values = array( 'nom' => $_POST['nom'], 'nomclub' => $_POST['club'], 'ceinture' => $_POST['ceinture'], 'dan' =>$_POST['dan']);
+{    
+    $values = array('nom' => $_POST['nom'], 'nomclub' => $_POST['nomclub'], 'ceinture' => $_POST['ceinture'], 'dan' =>$_POST['dan']);
     $values = array_filter($values);
-    if(!empty($values)){
-        $sql .= 'WHERE ' . key($values) . ' = :' . key($values);
-        next($values);
-        while(current($values)){
+    while(current($values)){
+        if(key($values) == 'nom')
+            $sql .= ' AND K.nom = :nom';
+        elseif (key($values) == 'nomclub')
+            $sql .= ' AND C.nom = :nomclub';
+        else
             $sql.= ' AND ' . key($values) . ' = :' . key($values);
-            next($values);
-        }
-        
+        next($values);
     }
 
     if(isset($_POST['tri']) && in_array($_POST['tri'], array('nom', 'age', 'poids', 'nomclub', 'nbwin', 'nbloss'))){
@@ -83,7 +84,6 @@ if (isset($_POST['submit']))
     $query = $db->query($sql);
 }
 	while($vResult  = $query->fetch()){
-		$id = $vResult['id'];
     	$nom = $vResult['nom'];
     	$nomClub = $vResult['nomclub'];
     	$age = $vResult['age'];

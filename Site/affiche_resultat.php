@@ -14,43 +14,50 @@ cette page sert à afficher les résultats de la compétition choisie
 <?php
 	session_start();
 	include ('connect.php');
-	include ('classement.php');
-	echo $_POST['comp']."<br>";
+	echo "competition choisie : <br>". $_POST['comp']."<br><br>";
 	list($dateCompet, $nomCompet) = explode('/',$_POST['comp']);
-	$dateCompet = pg_escape_string($dateCompet);
-	//$dateCompet = date('Y-m-d',$dateCompet); 
-	//echo $dateCompet.$nomCompet;
-	$connexion = fConnect();
-	$query = "SELECT part1, part2 FROM confrontation WHERE dateCompetition='".$dateCompet."' AND nomCompetition='".$nomCompet."'";
-
-
-	//$query = "SELECT part1, part2 FROM confrontation WHERE dateCompetition=".$dateCompet." AND nomCompetition=".$nomCompet;
-	$resultat = pg_query($connexion,$query);
+	$db = dbConnect();
+	$sql = "SELECT part1, part2, numerotour FROM confrontation WHERE dateCompetition= :datecompet AND nomCompetition= :nomcompet";
+    $values = array('datecompet' => $dateCompet, 'nomcompet' => $nomCompet);
+    $query = $db->prepare($sql);
+    $query->execute($values);
 ?>
 
 Liste des confrontations :<br>
-
+<table border='1' cellspacing='0'>
+    <tr>
+        <td>tour</td>
+        <td>particpants</td>
+    </tr>
+    
+    <?php
+	while ($row = $query->fetch()){
+		$sql = "SELECT K.nom AS nom, C.nom AS nomclub FROM karateka K, club C WHERE id = ".$row['part1']. " AND C.login = K.loginclub";
+		$kara1 = $db->query($sql)->fetch();
+		$sql = "SELECT nom FROM karateka WHERE id = ".$row['part2']. " AND C.login = K.loginclub";
+		$kara2 = $db->query($sql)->fetch();
+		echo "<tr>
+                <td>". $row['numerotour']. "</td>
+                <td>". $kara1['nom']. "(" . $kara1['nomclub']. ") vs ".$nom2['nom']. "(" . $kara1['nomclub']. ")</td></tr>";
+	};
+?>    
+</table>
+    
 <?php
-	while ($row = pg_fetch_array($resultat)){
-		$query2 = "SELECT nom FROM karateka WHERE id = ".$row['part1'];
-		$nom1 = pg_fetch_array(pg_query($connexion,$query2));
-		$query2 = "SELECT nom FROM karateka WHERE id = ".$row['part2'];
-		$nom2 = pg_fetch_array(pg_query($connexion,$query2));
+    $sql = "SELECT k.nom, MAX(c.numeroTour) FROM confrontation c, karateka k 
+        WHERE dateCompetition= :datecompet 
+        AND nomCompetition= :nomcompet
+        AND c.gagnant=k.id";
+    
+    $values = array('datecompet' => $dateCompet, 'nomcompet' => $nomCompet);
+    $query = $db->prepare($sql);
+    $query->execute($values);
 
-		echo $nom1['nom']." vs ".$nom2['nom']."<br>";
-		};
+    echo "<br><br><br>";
+    echo "karateka ayant gagné au dernier tour : <br>";
+    while($row = $query->fetch())
+        echo $row['nom']."<br>";
 ?>
-
-Classement par karatéka :
-
- <?php
-			classement($dateCompet,$nomCompet);
-
-			// $query2 = "SELECT k.nom, MAX(c.numeroTour) FROM confrontation c, karateka k WHERE c.gagnant=k.id"; //Le numeroTour le plus grand est celui de la finale
-			// $resultat2 = pg_quesry($connexion,$query2);
-			// $row= pg_fetch_array($resultat2);
-			// echo $row['k.nom'];
-		?>
 
 
 </body>

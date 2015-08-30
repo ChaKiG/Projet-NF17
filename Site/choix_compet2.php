@@ -14,9 +14,9 @@ cette page sert à choisir la compétition dont on veut avoir les résultats
 	<?php
 		session_start();
 		include ('connect.php');
-		$connexion = fConnect();
-		$query = "SELECT date, nom FROM competition";
-		$resultat =pg_query($connexion,$query);
+		$db = dbConnect();
+		$sql = "SELECT date, nom FROM competition";
+		$query= $db->query($sql);
 	?>
 
 	Choisissez la compétition :</br>
@@ -24,15 +24,10 @@ cette page sert à choisir la compétition dont on veut avoir les résultats
 	<form method="POST" action="affiche_resultat.php">
 	</SELECT>
 	<SELECT NAME="comp">
-
 	<?php
-		while ($row = pg_fetch_array($resultat)){
+		while ($row = $query->fetch())
 			echo "<OPTION VALUE='".$row[date]."/".$row['nom']."'>".$row[date]."/".$row['nom']." </OPTION>";
-			
-		}
 	?>
-
-
 	<INPUT VALUE="Ok" name='choix' TYPE="SUBMIT">
 	</FORM>
 
